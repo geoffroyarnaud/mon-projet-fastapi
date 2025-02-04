@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 import logging
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
@@ -21,6 +23,15 @@ app = FastAPI(
     * Gérer la base de données des étudiants
     """,
     version="1.0.0"
+)
+
+# Ajouter le middleware CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Autoriser toutes les origines
+    allow_credentials=True,
+    allow_methods=["*"],  # Autoriser toutes les méthodes (GET, POST, etc.)
+    allow_headers=["*"],  # Autoriser tous les en-têtes
 )
 
 # Ajout des routers
@@ -60,3 +71,8 @@ def custom_openapi():
     return app.openapi_schema
 
 app.openapi = custom_openapi
+
+@app.get("/predict/")
+async def predict():
+    # Votre logique ici
+    return {"message": "Prédiction réussie"}
